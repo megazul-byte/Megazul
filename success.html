@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pedido Confirmado — Megazul</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg,#e8f0fe 0%,#f0f2f7 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .box { background: #fff; border-radius: 16px; padding: 52px 44px; text-align: center; width: 440px; max-width: 95vw; box-shadow: 0 10px 40px rgba(26,95,212,0.12); }
+    .icon { font-size: 64px; margin-bottom: 16px; }
+    h1 { font-size: 26px; font-weight: 900; color: #1a5fd4; margin-bottom: 8px; }
+    p { font-size: 15px; color: #666; line-height: 1.6; margin-bottom: 6px; }
+    .order-id { background: #f0f5ff; border-radius: 8px; padding: 10px 18px; font-size: 14px; font-weight: 700; color: #1a5fd4; display: inline-block; margin: 14px 0 22px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; background: #1a5fd4; color: #fff; border: none; padding: 13px 30px; border-radius: 8px; font-size: 15px; font-weight: 700; text-decoration: none; cursor: pointer; }
+    .btn:hover { background: #1448a8; }
+    .simulated-notice { margin-top: 18px; font-size: 12px; color: #aaa; background: #fef9c3; border-radius: 6px; padding: 8px 12px; color: #a16207; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="icon">✅</div>
+    <h1>Pedido Confirmado!</h1>
+    <p>Seu pedido foi realizado com sucesso.</p>
+    <p>Você receberá um e-mail de confirmação em breve.</p>
+    <div class="order-id" id="orderId"></div>
+    <br>
+    <a href="index.html" class="btn">🛍️ Continuar comprando</a>
+    <div id="simulatedNotice" class="simulated-notice" style="display:none">
+      ⚠️ Pagamento simulado (ambiente de teste). Configure o MP_ACCESS_TOKEN no env.txt para pagamentos reais.
+    </div>
+  </div>
+  <script>
+    const p = new URLSearchParams(window.location.search);
+    const orderId = p.get('order_id');
+    const simulated = p.get('simulated');
+    const status = p.get('status') || p.get('collection_status');
+    const paymentId = p.get('payment_id') || p.get('collection_id');
+
+    if (orderId) {
+      document.getElementById('orderId').textContent = `Pedido #${orderId}`;
+    }
+    if (simulated) {
+      document.getElementById('simulatedNotice').style.display = 'block';
+    }
+    if (status === 'approved' && orderId && paymentId) {
+      fetch('/api/payment/confirm', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: parseInt(orderId), payment_id: paymentId, status: 'approved' })
+      });
+    }
+  </script>
+</body>
+</html>
