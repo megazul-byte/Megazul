@@ -43,5 +43,9 @@ initDB().then(() => {
   });
 }).catch(err => {
   console.error('Erro ao inicializar banco de dados:', err);
-  process.exit(1);
+  console.log('Iniciando servidor mesmo sem banco...');
+  
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+  });
 });
