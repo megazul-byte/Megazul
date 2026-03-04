@@ -31,21 +31,9 @@ app.use('/api/orders',     require('./routes/orders'));
 app.use('/api/payment',    require('./routes/payment'));
 app.use('/api/upload',     require('./routes/upload'));
 
-initDB().then(() => {
-  app.listen(PORT, () => {
-    console.log('\n========================================');
-    console.log(`  MEGAZUL - Loja Online`);
-    console.log('========================================');
-    console.log(`  Loja:   http://localhost:${PORT}/index.html`);
-    console.log(`  Admin:  http://localhost:${PORT}/admin.html`);
-    console.log(`  Login:  admin / ${process.env.ADMIN_PASSWORD || 'megazul123'}`);
-    console.log('========================================\n');
-  });
-}).catch(err => {
-  console.error('Erro ao inicializar banco de dados:', err);
-  console.log('Iniciando servidor mesmo sem banco...');
-  
+initDB().then(() => { 
   app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
   });
 });
+
